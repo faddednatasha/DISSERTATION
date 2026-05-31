@@ -32,62 +32,33 @@ st.set_page_config(
     initial_sidebar_state="expanded",
 )
 
-# ── Custom CSS (Slate & Emerald Theme) ────────────────────────────────────────
+# ── Custom CSS ────────────────────────────────────────────────────────────────
 st.markdown("""
 <style>
-    /* Global Background Adjustments */
-    .stApp {
-        background-color: #f8fafc;
-        color: #334155;
-    }
-    
-    /* Header Styles */
+    .stApp { background-color: #eef2eb; }
+    section[data-testid="stSidebar"] { background-color: #d6ddd2 !important; }
+
     .main-header {
-        font-size: 2.25rem; font-weight: 700; color: #0f172a;
-        padding-bottom: 0.5rem; margin-bottom: 0.5rem;
-        letter-spacing: -0.025em;
+        font-size: 2rem; font-weight: 700; color: #1a1a2e;
+        border-bottom: 3px solid #e74c3c; padding-bottom: 0.5rem; margin-bottom: 1rem;
     }
-    .section-header {
-        font-size: 1.25rem; font-weight: 600; color: #0f172a;
-        margin-top: 1.75rem; margin-bottom: 0.75rem;
-        letter-spacing: -0.02em;
+    .metric-card {
+        background: #f8f9fa; border-radius: 10px; padding: 1rem;
+        border-left: 4px solid #e74c3c; margin-bottom: 0.5rem;
     }
-    
-    /* Custom Metric Cards */
-    div[data-testid="stMetric"] {
-        background-color: #f1f5f9 !important;
-        border: 1px solid #e2e8f0 !important;
-        border-radius: 8px !important;
-        padding: 12px 16px !important;
-    }
-    div[data-testid="stMetricLabel"] > div {
-        color: #475569 !important;
-        font-weight: 500 !important;
-    }
-    div[data-testid="stMetricValue"] > div {
-        color: #0f172a !important;
-        font-weight: 700 !important;
-    }
-    
-    /* Badges & Tables */
     .event-badge {
-        display: inline-block; padding: 2px 10px; border-radius: 6px;
+        display: inline-block; padding: 2px 10px; border-radius: 12px;
         font-size: 0.75rem; font-weight: 600; color: white; margin-right: 5px;
     }
-    
-    /* Sidebar Styling Override */
-    section[data-testid="stSidebar"] {
-        background-color: #0f172a !important;
+    .section-header {
+        font-size: 1.2rem; font-weight: 600; color: #2c3e50;
+        margin-top: 1.5rem; margin-bottom: 0.5rem;
     }
-    section[data-testid="stSidebar"] .stMarkdown, 
-    section[data-testid="stSidebar"] h2, 
-    section[data-testid="stSidebar"] h3, 
-    section[data-testid="stSidebar"] label,
-    section[data-testid="stSidebar"] p {
-        color: #f8fafc !important;
-    }
-    section[data-testid="stSidebar"] hr {
-        border-color: #334155 !important;
+    div[data-testid="metric-container"] {
+        background-color: #f8f9fa;
+        border: 1px solid #dee2e6;
+        border-radius: 8px;
+        padding: 10px;
     }
 </style>
 """, unsafe_allow_html=True)
@@ -126,7 +97,7 @@ with st.sidebar:
     show_tarch = st.checkbox("Show TARCH(1,1) — Asymmetric", value=True)
 
     st.markdown("---")
-    st.caption("📚 Based on MBA Dissertation:\n*Time-Series Analysis of Market Liquidity & Volatility Clusters* — Aayushi Tewari, UPES 2026")
+    st.caption("📚 Made By ~ Aayushi Tewari, UPES 2026 ")
 
 # ── Data Loading ──────────────────────────────────────────────────────────────
 @st.cache_data(ttl=3600, show_spinner=False)
@@ -153,12 +124,12 @@ def filter_events(events, start, end, categories, regions, severities):
     return filtered
 
 # ── Main App ──────────────────────────────────────────────────────────────────
-st.markdown('<div class="main-header">Geopolitical Shock & Volatility Analyzer</div>', unsafe_allow_html=True)
-st.markdown("<p style='color: #475569; margin-top:-10px;'>Investigate how global geopolitical events drive volatility clusters in the Indian stock market.</p>", unsafe_allow_html=True)
+st.markdown('<div class="main-header">📉 Geopolitical Shock & Volatility Analyzer</div>', unsafe_allow_html=True)
+st.markdown("*Investigate how global geopolitical events drive volatility clusters in the Indian stock market.*")
 
 # Data source info
 st.markdown("""
-<div style="background:#f1f5f9; border-left:4px solid #6366f1; border-radius:6px; padding:12px 16px; margin-bottom:20px; font-size:0.88rem; color:#334155;">
+<div style="background:#eaf4fb; border-left:4px solid #2980b9; border-radius:6px; padding:10px 16px; margin-bottom:12px; font-size:0.88rem;">
     📡 <b>Live Market Data:</b> Fetched via <b>yfinance</b> (Yahoo Finance API) —
     NIFTY 50 (<code>^NSEI</code>), BSE SENSEX (<code>^BSESN</code>), NIFTY Bank (<code>^NSEBANK</code>).
     Refreshes every <b>1 hour</b>. &nbsp;|&nbsp;
@@ -198,7 +169,7 @@ col3.metric("🌊 Avg Annual Vol",  f"{float(annualised_vol):.1f}%")
 col4.metric("📉 Max Drawdown",    f"{float(max_drawdown):.1f}%")
 col5.metric("🌍 Events Shown",    len(active_events))
 
-st.markdown("<hr style='border-color:#e2e8f0; margin: 24px 0;'/>", unsafe_allow_html=True)
+st.markdown("---")
 
 # ── TABS ──────────────────────────────────────────────────────────────────────
 tab1, tab2, tab3, tab4 = st.tabs([
@@ -221,7 +192,7 @@ with tab1:
     # Price line
     fig.add_trace(go.Scatter(
         x=df.index, y=df["Close"],
-        name="Close Price", line=dict(color="#0f172a", width=1.5),
+        name="Close Price", line=dict(color="#2c3e50", width=1.5),
         hovertemplate="%{x|%d %b %Y}<br>Close: %{y:,.2f}<extra></extra>"
     ), row=1, col=1)
 
@@ -232,7 +203,7 @@ with tab1:
             idx = df.index.searchsorted(edate)
             if idx < len(df):
                 price_at_event = float(df["Close"].iloc[idx])
-                color = CATEGORY_COLORS.get(ev["category"], "#6366f1")
+                color = CATEGORY_COLORS.get(ev["category"], "#999")
                 fig.add_vline(
                     x=edate, line_width=1.5,
                     line_dash="dot", line_color=color, row=1, col=1
@@ -245,24 +216,23 @@ with tab1:
                 )
 
     # Daily returns bar
-    colors_ret = ["#ef4444" if r < 0 else "#10b981" for r in df["Returns"].fillna(0)]
+    colors_ret = ["#e74c3c" if r < 0 else "#27ae60" for r in df["Returns"].fillna(0)]
     fig.add_trace(go.Bar(
         x=df.index, y=df["Returns"] * 100,
         name="Daily Return %", marker_color=colors_ret, opacity=0.7,
         hovertemplate="%{x|%d %b %Y}<br>Return: %{y:.2f}%<extra></extra>"
     ), row=2, col=1)
 
-    fig.update_yaxes(type="log", row=1, col=1, title_text="Price (Log)", title_font=dict(color="#334155"))
-    fig.update_yaxes(row=2, col=1, title_text="Return %", title_font=dict(color="#334155"))
+    fig.update_yaxes(type="log", row=1, col=1, title_text="Price (Log)")
+    fig.update_yaxes(row=2, col=1, title_text="Return %")
     fig.update_layout(
         height=600, showlegend=False,
-        plot_bgcolor="#f8fafc", paper_bgcolor="#f8fafc",
+        plot_bgcolor="white", paper_bgcolor="white",
         margin=dict(l=60, r=20, t=50, b=40),
-        hovermode="x unified",
-        font=dict(color="#334155")
+        hovermode="x unified"
     )
-    fig.update_xaxes(showgrid=True, gridcolor="#e2e8f0")
-    fig.update_yaxes(showgrid=True, gridcolor="#e2e8f0")
+    fig.update_xaxes(showgrid=True, gridcolor="#f0f0f0")
+    fig.update_yaxes(showgrid=True, gridcolor="#f0f0f0")
     st.plotly_chart(fig, use_container_width=True)
 
     # Event legend
@@ -306,14 +276,14 @@ with tab2:
     fig2 = go.Figure()
     fig2.add_trace(go.Scatter(
         x=rolling_vol.index, y=rolling_vol,
-        name=f"Rolling Vol ({rolling_window}d)", line=dict(color="#6366f1", width=1.5),
+        name=f"Rolling Vol ({rolling_window}d)", line=dict(color="#3498db", width=1.5),
         hovertemplate="%{x|%d %b %Y}<br>Rolling Vol: %{y:.1f}%<extra></extra>"
     ))
 
     if show_garch and garch_vol is not None:
         fig2.add_trace(go.Scatter(
             x=garch_vol.index, y=garch_vol,
-            name="GARCH(1,1)", line=dict(color="#334155", width=1.5, dash="dash"),
+            name="GARCH(1,1)", line=dict(color="#e67e22", width=1.5, dash="dash"),
             hovertemplate="%{x|%d %b %Y}<br>GARCH Vol: %{y:.1f}%<extra></extra>"
         ))
     elif show_garch and isinstance(garch_summary, str):
@@ -322,7 +292,7 @@ with tab2:
     if show_tarch and tarch_vol is not None:
         fig2.add_trace(go.Scatter(
             x=tarch_vol.index, y=tarch_vol,
-            name="TARCH(1,1) — Asymmetric", line=dict(color="#ef4444", width=1.5, dash="dot"),
+            name="TARCH(1,1) — Asymmetric", line=dict(color="#e74c3c", width=1.5, dash="dot"),
             hovertemplate="%{x|%d %b %Y}<br>TARCH Vol: %{y:.1f}%<extra></extra>"
         ))
     elif show_tarch and isinstance(tarch_summary, str):
@@ -331,19 +301,18 @@ with tab2:
     # Add event markers
     for ev in active_events:
         edate = pd.Timestamp(ev["date"])
-        color = CATEGORY_COLORS.get(ev["category"], "#6366f1")
-        fig2.add_vline(x=edate, line_width=1, line_dash="dot", line_color=color, opacity=0.4)
+        color = CATEGORY_COLORS.get(ev["category"], "#999")
+        fig2.add_vline(x=edate, line_width=1, line_dash="dot", line_color=color, opacity=0.6)
 
     fig2.update_layout(
         height=450, title="Annualised Conditional Volatility (%) — All Models",
         yaxis_title="Volatility (%)", xaxis_title="",
-        plot_bgcolor="#f8fafc", paper_bgcolor="#f8fafc",
+        plot_bgcolor="white", paper_bgcolor="white",
         legend=dict(orientation="h", yanchor="bottom", y=1.02, xanchor="right", x=1),
-        margin=dict(l=60, r=20, t=60, b=40), hovermode="x unified",
-        font=dict(color="#334155")
+        margin=dict(l=60, r=20, t=60, b=40), hovermode="x unified"
     )
-    fig2.update_xaxes(showgrid=True, gridcolor="#e2e8f0")
-    fig2.update_yaxes(showgrid=True, gridcolor="#e2e8f0")
+    fig2.update_xaxes(showgrid=True, gridcolor="#f0f0f0")
+    fig2.update_yaxes(showgrid=True, gridcolor="#f0f0f0")
     st.plotly_chart(fig2, use_container_width=True)
 
     # Volatility distribution
@@ -354,17 +323,14 @@ with tab2:
         fig_hist = go.Figure()
         fig_hist.add_trace(go.Histogram(
             x=returns * 100, nbinsx=100,
-            marker_color="#6366f1", opacity=0.75, name="Daily Returns"
+            marker_color="#3498db", opacity=0.75, name="Daily Returns"
         ))
         fig_hist.update_layout(
             title="Return Distribution (Fat Tails = Volatility Clustering)",
             xaxis_title="Daily Return (%)", yaxis_title="Frequency",
-            height=320, plot_bgcolor="#f8fafc", paper_bgcolor="#f8fafc",
-            margin=dict(l=50, r=20, t=50, b=40), showlegend=False,
-            font=dict(color="#334155")
+            height=320, plot_bgcolor="white", paper_bgcolor="white",
+            margin=dict(l=50, r=20, t=50, b=40), showlegend=False
         )
-        fig_hist.update_xaxes(showgrid=True, gridcolor="#e2e8f0")
-        fig_hist.update_yaxes(showgrid=True, gridcolor="#e2e8f0")
         st.plotly_chart(fig_hist, use_container_width=True)
 
     with col_b:
@@ -372,21 +338,18 @@ with tab2:
         fig_sq = go.Figure()
         fig_sq.add_trace(go.Scatter(
             x=sq_returns.index, y=sq_returns,
-            line=dict(color="#ef4444", width=0.8), name="Squared Returns"
+            line=dict(color="#e74c3c", width=0.8), name="Squared Returns"
         ))
         fig_sq.update_layout(
             title="Squared Returns — Visualising Volatility Clusters",
             xaxis_title="", yaxis_title="Squared Return × 100",
-            height=320, plot_bgcolor="#f8fafc", paper_bgcolor="#f8fafc",
-            margin=dict(l=50, r=20, t=50, b=40), showlegend=False,
-            font=dict(color="#334155")
+            height=320, plot_bgcolor="white", paper_bgcolor="white",
+            margin=dict(l=50, r=20, t=50, b=40), showlegend=False
         )
         for ev in active_events:
             edate = pd.Timestamp(ev["date"])
             fig_sq.add_vline(x=edate, line_width=0.8, line_dash="dot",
-                             line_color=CATEGORY_COLORS.get(ev["category"], "#6366f1"), opacity=0.4)
-        fig_sq.update_xaxes(showgrid=True, gridcolor="#e2e8f0")
-        fig_sq.update_yaxes(showgrid=True, gridcolor="#e2e8f0")
+                             line_color=CATEGORY_COLORS.get(ev["category"], "#999"), opacity=0.5)
         st.plotly_chart(fig_sq, use_container_width=True)
 
     # Descriptive stats
@@ -437,7 +400,7 @@ with tab3:
 
             # Summary bar chart
             fig3 = go.Figure()
-            colors = ["#ef4444" if v > 0 else "#10b981" for v in impact_df["Vol Change (%)"]]
+            colors = ["#e74c3c" if v > 0 else "#27ae60" for v in impact_df["Vol Change (%)"]]
             fig3.add_trace(go.Bar(
                 x=impact_df["Event"],
                 y=impact_df["Vol Change (%)"],
@@ -449,18 +412,18 @@ with tab3:
             fig3.update_layout(
                 title=f"Volatility Change After Each Geopolitical Event (Post vs Pre {event_window} days)",
                 xaxis_title="", yaxis_title="Volatility Change (%)",
-                height=400, plot_bgcolor="#f8fafc", paper_bgcolor="#f8fafc",
+                height=400, plot_bgcolor="white", paper_bgcolor="white",
                 xaxis_tickangle=-35, margin=dict(l=60, r=20, t=60, b=120),
-                showlegend=False, font=dict(color="#334155")
+                showlegend=False
             )
-            fig3.add_hline(y=0, line_color="#0f172a", line_width=1)
+            fig3.add_hline(y=0, line_color="#2c3e50", line_width=1)
             fig3.update_xaxes(showgrid=False)
-            fig3.update_yaxes(showgrid=True, gridcolor="#e2e8f0")
+            fig3.update_yaxes(showgrid=True, gridcolor="#f0f0f0")
             st.plotly_chart(fig3, use_container_width=True)
 
             # Event day return chart
             fig4 = go.Figure()
-            colors2 = ["#ef4444" if v < 0 else "#10b981"
+            colors2 = ["#e74c3c" if v < 0 else "#27ae60"
                        for v in impact_df["Event Day Ret (%)"].fillna(0)]
             fig4.add_trace(go.Bar(
                 x=impact_df["Event"],
@@ -474,13 +437,13 @@ with tab3:
             fig4.update_layout(
                 title="Index Return on the Day of Each Event",
                 xaxis_title="", yaxis_title="Return (%)",
-                height=380, plot_bgcolor="#f8fafc", paper_bgcolor="#f8fafc",
+                height=380, plot_bgcolor="white", paper_bgcolor="white",
                 xaxis_tickangle=-35, margin=dict(l=60, r=20, t=60, b=120),
-                showlegend=False, font=dict(color="#334155")
+                showlegend=False
             )
-            fig4.add_hline(y=0, line_color="#0f172a", line_width=1)
+            fig4.add_hline(y=0, line_color="#2c3e50", line_width=1)
             fig4.update_xaxes(showgrid=False)
-            fig4.update_yaxes(showgrid=True, gridcolor="#e2e8f0")
+            fig4.update_yaxes(showgrid=True, gridcolor="#f0f0f0")
             st.plotly_chart(fig4, use_container_width=True)
 
             # Table
@@ -510,35 +473,35 @@ with tab3:
                 fig5 = go.Figure()
                 fig5.add_trace(go.Scatter(
                     x=zoom_df.index, y=zoom_df["Close"],
-                    mode="lines+markers", line=dict(color="#0f172a", width=2),
+                    mode="lines+markers", line=dict(color="#2c3e50", width=2),
                     marker=dict(size=4), name="Close Price"
                 ))
-                
+                # Use add_shape + add_annotation separately (avoids Plotly/Pandas Timestamp bug)
                 edate_str = edate.strftime("%Y-%m-%d")
                 fig5.add_shape(
                     type="line",
                     x0=edate_str, x1=edate_str, y0=0, y1=1,
                     xref="x", yref="paper",
-                    line=dict(color="#ef4444", width=2, dash="solid")
+                    line=dict(color="#e74c3c", width=2, dash="solid")
                 )
                 fig5.add_annotation(
                     x=edate_str, y=0.97, xref="x", yref="paper",
                     text=f"◀ {selected_ev['event'][:30]}",
-                    showarrow=False, font=dict(color="#ef4444", size=9),
-                    xanchor="left", bgcolor="rgba(248, 250, 252, 0.8)"
+                    showarrow=False, font=dict(color="#e74c3c", size=9),
+                    xanchor="left", bgcolor="rgba(255,255,255,0.7)"
                 )
                 # PRE shading
                 fig5.add_shape(
                     type="rect",
                     x0=zoom_df.index[0].strftime("%Y-%m-%d"), x1=edate_str,
                     y0=0, y1=1, xref="x", yref="paper",
-                    fillcolor="#6366f1", opacity=0.05, line_width=0
+                    fillcolor="#3498db", opacity=0.05, line_width=0
                 )
                 fig5.add_annotation(
                     x=zoom_df.index[0].strftime("%Y-%m-%d"), y=0.05,
                     xref="x", yref="paper",
                     text="PRE", showarrow=False,
-                    font=dict(color="#6366f1", size=10, family="Arial Black"),
+                    font=dict(color="#3498db", size=10, family="Arial Black"),
                     xanchor="left"
                 )
                 # POST shading
@@ -546,23 +509,22 @@ with tab3:
                     type="rect",
                     x0=edate_str, x1=zoom_df.index[-1].strftime("%Y-%m-%d"),
                     y0=0, y1=1, xref="x", yref="paper",
-                    fillcolor="#ef4444", opacity=0.05, line_width=0
+                    fillcolor="#e74c3c", opacity=0.05, line_width=0
                 )
                 fig5.add_annotation(
                     x=zoom_df.index[-1].strftime("%Y-%m-%d"), y=0.05,
                     xref="x", yref="paper",
                     text="POST", showarrow=False,
-                    font=dict(color="#ef4444", size=10, family="Arial Black"),
+                    font=dict(color="#e74c3c", size=10, family="Arial Black"),
                     xanchor="right"
                 )
                 fig5.update_layout(
                     title=f"±30 Days Around: {selected_ev['event']} ({selected_ev['date']})",
-                    height=360, plot_bgcolor="#f8fafc", paper_bgcolor="#f8fafc",
-                    margin=dict(l=60, r=20, t=60, b=40), showlegend=False,
-                    font=dict(color="#334155")
+                    height=360, plot_bgcolor="white", paper_bgcolor="white",
+                    margin=dict(l=60, r=20, t=60, b=40), showlegend=False
                 )
-                fig5.update_xaxes(showgrid=True, gridcolor="#e2e8f0")
-                fig5.update_yaxes(showgrid=True, gridcolor="#e2e8f0", title_text="Price")
+                fig5.update_xaxes(showgrid=True, gridcolor="#f0f0f0")
+                fig5.update_yaxes(showgrid=True, gridcolor="#f0f0f0", title_text="Price")
                 st.plotly_chart(fig5, use_container_width=True)
 
                 st.info(f"**📝 Event Context:** {selected_ev['description']}")
@@ -625,7 +587,7 @@ with tab4:
         else:
             st.info("Enable TARCH(1,1) in sidebar to view parameters.")
 
-    st.markdown("<hr style='border-color:#e2e8f0; margin: 24px 0;'/>", unsafe_allow_html=True)
+    st.markdown("---")
     st.markdown("#### 📖 How to Read These Parameters")
     st.markdown("""
 | Parameter | What It Means |
@@ -638,5 +600,5 @@ with tab4:
 | **AIC / BIC** | Model fit — lower is better; use to compare GARCH vs TARCH |
     """)
 
-    st.markdown("<hr style='border-color:#e2e8f0; margin: 24px 0;'/>", unsafe_allow_html=True)
-    st.caption("Dissertation finding: TARCH(1,1) had γ = 0.1284 (p<0.001) on NIFTY 50 (2000–2026), confirming negative shocks amplify volatility ~2.44× more than positive shocks.")
+    st.markdown("---")
+   
