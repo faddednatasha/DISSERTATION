@@ -3,7 +3,7 @@
 
 Inspired by the MBA Dissertation:
 **"Time-Series Analysis of Market Liquidity and Volatility Clusters: An Econometric Investigation of the Indian Stock Market"**
-— Aayushi Tewari, UPEs, 2026
+
 
 ---
 
